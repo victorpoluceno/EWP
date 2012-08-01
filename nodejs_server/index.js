@@ -27,7 +27,7 @@ var messages = new Array();
 io.sockets.on('connection', function (client) {
 
 	//-- Variables declarations--//
-	var guest = false;
+	var initiator = true;
 	var room = '';
 
 	/**
@@ -37,7 +37,7 @@ io.sockets.on('connection', function (client) {
 	 */
 	client.on("invite", function(invitation){
 		room = invitation;
-		guest = true;
+		initiator = false;
 		client.join(room);
 		messages[room] = new Array();
 	});
@@ -46,7 +46,7 @@ io.sockets.on('connection', function (client) {
 	 * If you are the first user to connect 
 	 * create room
 	 */
-	if(!guest){
+	if(initiator){
 		room = Math.floor(Math.random()*1000001).toString();
 		client.emit('getRoom', {roomId : room});
 		client.join(room);
